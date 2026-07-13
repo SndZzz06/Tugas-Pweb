@@ -1,0 +1,67 @@
+{{ define "title" }}NextState - Create Project{{ end }}
+
+{{ define "content" }}
+    <h2>Projects</h2>
+    <div class="header-buttons">
+        <a href="/projects/create" class="btn btn-primary">New Project</a>
+    </div>
+
+    <div class="project-list">
+      {{ if .Data.Projects }}
+        {{ range .Data.Projects }}
+          <div class="project-card" style="border-top:5px solid {{ if .Color }}{{ .Color }}{{ else }}#007bff{{ end }}">
+            <h3><a href="/projects/{{ .ID }}" style="text-decoration:none; color:inherit;">{{ .Name }}</a></h3>
+            <p>{{ .Description }}</p>
+            <small>Start: {{ .StartDate }} | End: {{ .EndDate }}</small>
+          </div>
+        {{ end }}
+      {{ end }}
+    </div>
+
+  <!-- Modal Create Project (Always Open for this Route) -->
+  <div id="addProjectModal" class="modal-overlay" style="display: flex;">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h3>Create New Project</h3>
+              <a href="/" class="close-btn" style="text-decoration:none; color:inherit;"><i class="fa-solid fa-xmark"></i></a>
+          </div>
+          <p class="text-muted mb-3" style="font-size: 14px;">Add a new project to your list</p>
+          <form method="POST" action="/projects">
+              <input type="hidden" name="csrf_token" value="{{ .CSRFToken }}">
+              <div class="form-group mt-3">
+                  <label for="name">Project Name</label>
+                  <input type="text" id="name" name="name" class="form-control" placeholder="Enter project name" required>
+              </div>
+              <div class="form-group mt-3">
+                  <label for="description">Description</label>
+                  <textarea id="description" name="description" class="form-control" placeholder="Enter project description" required></textarea>
+              </div>
+              <div class="form-group mt-3">
+                  <label for="color">Color</label>
+                  <select id="color" name="color" class="form-control">
+                    <option value="#6f42c1">Purple</option>
+                    <option value="#dc3545">Red</option>
+                    <option value="#fd7e14">Orange</option>
+                    <option value="#28a745">Green</option>
+                    <option value="#007bff">Blue</option>
+                    <option value="#e83e8c">Pink</option>
+                  </select>
+              </div>
+              <div class="form-group mt-3" style="display:flex; gap:10px;">
+                  <div style="flex:1;">
+                      <label for="start_date">Start Date</label>
+                      <input type="date" id="start_date" name="start_date" class="form-control" required>
+                  </div>
+                  <div style="flex:1;">
+                      <label for="end_date">End Date</label>
+                      <input type="date" id="end_date" name="end_date" class="form-control" required>
+                  </div>
+              </div>
+              <div class="modal-footer mt-4 gap-2" style="display:flex; justify-content:flex-end;">
+                  <a href="/" class="btn border-btn" style="text-decoration:none;">Cancel</a>
+                  <button type="submit" class="btn btn-dark">Create Project</button>
+              </div>
+          </form>
+      </div>
+  </div>
+{{ end }}

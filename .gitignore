@@ -1,0 +1,9 @@
+.env
+*.exe
+*.dll
+*.log
+/tmp/
+coverage/
+.vscode/
+__pycache__/
+*.tmp
