@@ -1,0 +1,25 @@
+{{ define "title" }}NextState - Dashboard{{ end }}
+
+{{ define "content" }}
+    <h2>Projects</h2>
+    <div class="header-buttons">
+        <a href="/projects/create" class="btn btn-primary">New Project</a>
+    </div>
+
+    <div class="project-list">
+      {{ if .Data.Projects }}
+        {{ range .Data.Projects }}
+          <div class="project-card" style="border-top: 5px solid {{ if .Color }}{{ .Color }}{{ else }}#007bff{{ end }}">
+            <h3><a href="/projects/{{ .ID }}" class="stretched-link" style="text-decoration:none; color:inherit;">{{ .Name }}</a></h3>
+            <p>{{ .Description }}</p>
+            <small>Start: {{ .StartDate }} | End: {{ .EndDate }}</small>
+          </div>
+        {{ end }}
+      {{ else }}
+        <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: var(--bg-card); border-radius: 12px; border: 1px dashed var(--border-color);">
+          <i class="fa-solid fa-folder-open" style="font-size: 3rem; color: var(--text-dim); margin-bottom: 1rem;"></i>
+          <p class="text-muted">No projects found. Create your first project to get started!</p>
+        </div>
+      {{ end }}
+    </div>
+{{ end }}

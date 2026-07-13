@@ -1,0 +1,60 @@
+CREATE DATABASE IF NOT EXISTS `nextstate_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `nextstate_db`;
+
+-- Drop tables if they exist
+DROP TABLE IF EXISTS `task_user`;
+DROP TABLE IF EXISTS `tasks`;
+DROP TABLE IF EXISTS `projects`;
+DROP TABLE IF EXISTS `users`;
+
+-- Create users table
+CREATE TABLE `users` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NULL UNIQUE,
+  `phone` VARCHAR(50) NULL,
+  `password` VARCHAR(255) NOT NULL,
+  `role` VARCHAR(100) DEFAULT 'Member',
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Create projects table
+CREATE TABLE `projects` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(255) NOT NULL,
+  `description` TEXT NULL,
+  `color` VARCHAR(50) NULL,
+  `start_date` DATE NOT NULL,
+  `end_date` DATE NOT NULL,
+  `status` VARCHAR(50) DEFAULT 'New',
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Create tasks table
+CREATE TABLE `tasks` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `project_id` BIGINT NOT NULL,
+  `title` VARCHAR(255) NOT NULL,
+  `description` TEXT NULL,
+  `start_date` DATE NULL,
+  `due_date` DATE NULL,
+  `priority` VARCHAR(50) DEFAULT 'Medium',
+  `status` VARCHAR(50) DEFAULT 'To Do',
+  `attachment` VARCHAR(255) NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Create task_user pivot table
+CREATE TABLE `task_user` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `task_id` BIGINT NOT NULL,
+  `user_id` BIGINT NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
